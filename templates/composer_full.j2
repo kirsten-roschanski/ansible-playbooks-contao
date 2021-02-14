@@ -1,0 +1,24 @@
+{
+    "type": "project",
+    "require": {
+        "contao/conflicts": "*@dev",
+        "contao/manager-bundle": "{{ contao_version }}.*",
+        "contao/calendar-bundle": "{{ contao_version }}.*",
+        "contao/comments-bundle": "{{ contao_version }}.*",
+        "contao/faq-bundle": "{{ contao_version }}.*",
+        "contao/listing-bundle": "{{ contao_version }}.*",
+        "contao/news-bundle": "{{ contao_version }}.*",
+        "contao/newsletter-bundle": "{{ contao_version }}.*",
+    },
+    "extra": {
+        "contao-component-dir": "assets"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Contao\\ManagerBundle\\Composer\\ScriptHandler::initializeApplication"
+        ],
+        "post-update-cmd": [
+            "Contao\\ManagerBundle\\Composer\\ScriptHandler::initializeApplication"
+        ]
+    }
+}
