@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+parameters:
+  database_host: {{ database_host | default("localhost") }}
+  database_port: {{ database_port | default("3306") }}
+  database_user: {{ database_user }}
+  database_password: '{{ database_password }}'
+  database_name: {{ database_name }}

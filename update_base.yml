@@ -1,0 +1,36 @@
+---
+- hosts: all
+  tasks:
+  - name: 'Show Contao Version'
+    command: "{{ php_path }} {{ websitePath }}/vendor/bin/contao-console contao:version"
+    register: version
+  - debug:
+     msg: "Contao Version - {{ version.stdout_lines }}"
+
+  - name: 'Contao-Manager Update'
+    shell: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php self-update"
+    args:
+      chdir: '{{ websitePath }}'
+    register: update
+  - debug:
+     var: update.stdout_lines
+
+  - name: 'Update Contao'
+    shell: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php composer update"
+    args:
+      chdir: '{{ websitePath }}'
+    register: update
+  - debug:
+     var: update.stdout_lines
+
+  - name: 'Datenbankupdate für Contao'
+    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:migrate "
+    register: dbupdate
+  - debug:
+     var: dbupdate.stdout_lines
+
+  - name: 'Show Contao Version'
+    command: "{{ php_path }} {{ websitePath }}/vendor/bin/contao-console contao:version"
+    register: version
+  - debug:
+      msg: "Contao Version - {{ version.stdout_lines }}"

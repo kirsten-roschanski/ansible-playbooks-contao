@@ -1,0 +1,9 @@
+{
+    "__comment" : "{{ ansible_managed }}",
+    "users": {
+        "{{ contao_manager_user }}": {
+            "username": "{{ contao_manager_user }}",
+            "password": "{{ contao_manager_pass_crypt }}"
+        }
+    }
+}
