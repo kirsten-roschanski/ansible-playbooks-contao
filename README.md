@@ -59,3 +59,20 @@ Es werden 19 Tasks abgearbeitet:
 ```bash
 ansible-playbook -i customers/website-001.yml install_base.yml
 ```
+
+
+## Datenbank Backup
+### Was macht dieses Playbook?
+
+Es werden nur 2 Tasks abgearbeitet:
+
+- Es wird ein Datenbankbackup in system/tmp erstellt.
+- Der Datenbankdump wird auf die lokale Festplatte kopiert.
+
+
+### Wie führe ich das nun aus?
+
+```bash
+ansible-playbook -i customers/website-001.yml datenbank_backup.yml
+```
+
