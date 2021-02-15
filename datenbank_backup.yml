@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+    - name: Dump of Databse
+      shell: "mysqldump -u {{ database_user }} --password={{ database_password }} -h {{ database_host }} {{ database_name }} > {{ websitePath }}/system/tmp/dump.sql"
+      args:
+        chdir: "{{ websitePath }}"
+
+    - name: Copy from remote to local
+      ansible.builtin.fetch:
+        src: "{{ websitePath }}/system/tmp/dump.sql"
+        dest: "./backups/{{ ansible_date_time.date }}-{{ inventory_hostname }}.sql"
+        flat: yes
