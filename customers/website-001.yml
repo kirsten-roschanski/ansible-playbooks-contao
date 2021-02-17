@@ -15,6 +15,13 @@ website001: # Einzigartigen Namen, damit die Variablen nicht überschrieben werd
     database_password: meinmySQLPasswort
     database_name: mysql1
 
+    mailer_transport: smtp
+    mailer_host: mail.contao.org
+    mailer_user: kjones
+    mailer_password: meinSmtpPasswort
+    mailer_port: 25
+    mailer_encryption: tls
+
     ## CONTAO INSTALL
     installPassword: meinInstallPassword
 

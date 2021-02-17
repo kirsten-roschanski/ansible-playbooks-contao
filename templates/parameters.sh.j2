@@ -5,3 +5,12 @@ parameters:
   database_user: {{ database_user }}
   database_password: '{{ database_password }}'
   database_name: {{ database_name }}
+  
+  {% if mailer_transport is defined %}
+  mailer_transport: {{ mailer_transport | default("smtp") }}
+  mailer_host: {{ mailer_host }}
+  mailer_user: {{ mailer_user }}
+  mailer_password: {{ mailer_password }}
+  mailer_port: {{ mailer_port | default("587") }}
+  mailer_encryption: {{ mailer_encryption | default("tls") }}
+  {% endif %}
