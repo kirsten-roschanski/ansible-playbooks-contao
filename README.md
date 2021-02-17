@@ -76,3 +76,21 @@ Es werden nur 2 Tasks abgearbeitet:
 ansible-playbook -i customers/website-001.yml datenbank_backup.yml
 ```
 
+
+## Upgrade von Contao
+### Was macht dieses Playbook?
+
+Es werden nur 2 Tasks abgearbeitet:
+
+- Anzeige der aktuellen Contao Version
+- Verändern der compser.json und anlegen einer Kopie
+- ContaoManager noch mal prüfen und ggf. aktualisieren
+- Contao Update durchführen
+- Datenbank aktualisieren
+- Neue Contao-Version ausgeben.
+
+### Wie führe ich das nun aus?
+
+```bash
+ansible-playbook -i customers/website-001.yml upgrade_base.yml
+```
