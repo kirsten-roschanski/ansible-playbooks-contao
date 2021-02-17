@@ -76,6 +76,21 @@ Es werden nur 2 Tasks abgearbeitet:
 ansible-playbook -i customers/website-001.yml datenbank_backup.yml
 ```
 
+## Backup von Contao
+### Was macht dieses Playbook?
+
+Es werden nur 4 Tasks abgearbeitet:
+
+- Es wird ein Datenbankbackup in system/tmp erstellt.
+- Der Datenbankdump wird auf die lokale Festplatte kopiert.
+- Holt den Ordner files auf die lokale Festplatte.
+- Holt den Ordner templates auf die lokale Festplatte.
+
+### Wie führe ich das nun aus?
+
+```bash
+ansible-playbook -i customers/website-001.yml backup_full.yml
+```
 
 ## Upgrade von Contao
 ### Was macht dieses Playbook?

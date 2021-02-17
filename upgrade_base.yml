@@ -14,14 +14,6 @@
       replace: 'contao/\1: "{{contao_version}}.*\2'
       backup: yes
 
-  - name: 'Show Contao-Manager'
-    command: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php -V"
-    args:
-      chdir: '{{ websitePath }}'
-    register: version
-  - debug:
-     var: version.stdout_lines
-
   - name: 'Contao-Manager Update'
     shell: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php self-update"
     args:
@@ -29,14 +21,6 @@
     register: update
   - debug:
      var: update.stdout_lines
-
-  - name: 'Show Contao-Manager after Update'
-    command: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php -V"
-    args:
-      chdir: '{{ websitePath }}'
-    register: version
-  - debug:
-     var: version.stdout_lines
 
   - name: 'Update Contao'
     shell: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php composer update"
