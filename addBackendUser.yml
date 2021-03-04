@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+  - name: create Conato-BackendUser
+    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:user:create --username={{ item[0] }} --name='{{ item[1] }}' --email='{{ item[2] }}' --password='{{ item[3] }}' --change-password {{ item[5] }} --language={{ item[4] }}"
+    with_nested:
+    - "{{ users }}"
