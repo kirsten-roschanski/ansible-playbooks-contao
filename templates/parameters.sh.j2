@@ -5,7 +5,8 @@ parameters:
   database_user: {{ database_user }}
   database_password: '{{ database_password }}'
   database_name: {{ database_name }}
-  
+  secret: {{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=64') }}
+
   {% if mailer_transport is defined %}
   mailer_transport: {{ mailer_transport | default("smtp") }}
   mailer_host: {{ mailer_host }}
