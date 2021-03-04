@@ -1,0 +1,24 @@
+---
+- hosts: all
+  tasks:
+  - name: generate composer.json
+    template:
+      src: composer.j2
+      dest: "{{ websitePath }}/composer.json"
+
+  - name: install Contao
+    shell: "{{ php_path }} -q -dmax_execution_time=0 -dmemory_limit=-1 -dallow_url_fopen=1 web/contao-manager.phar.php composer install --prefer-dist --no-dev --no-progress --no-ansi --no-interaction --optimize-autoloader"
+    args:
+      chdir: '{{ websitePath }}'
+
+  - name: install Contao-Modules
+    shell: "{{ php_path }} -q -dmax_execution_time=0 -dmemory_limit=-1 -dallow_url_fopen=1 web/contao-manager.phar.php composer require {{ item }} --prefer-dist --no-progress --no-ansi --no-interaction --optimize-autoloader"
+    args:
+      chdir: '{{ websitePath }}'
+    loop: "{{ contao_modules }}"
+
+  - name: update/create database-shema
+    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:migrate"
+    register: dbupdate
+  - debug:
+     var: dbupdate.stdout_lines
