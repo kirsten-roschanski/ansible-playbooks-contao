@@ -1,0 +1,19 @@
+<?php
+// {{ ansible_managed }}
+
+### INSTALL SCRIPT START ###
+$GLOBALS['TL_CONFIG']['licenseAccepted'] = true;
+$GLOBALS['TL_CONFIG']['installPassword'] = '{{ psk }}';
+$GLOBALS['TL_CONFIG']['websiteTitle'] = '{{websiteTitle}}';
+$GLOBALS['TL_CONFIG']['adminEmail']   = '{{adminEmail}}';
+$GLOBALS['TL_CONFIG']['minifyMarkup'] = true;
+$GLOBALS['TL_CONFIG']['gzipScripts']  = true;
+$GLOBALS['TL_CONFIG']['maxFileSize']  = 20480000;
+$GLOBALS['TL_CONFIG']['imageWidth']   = 3000;
+$GLOBALS['TL_CONFIG']['imageHeight']  = 3000;
+$GLOBALS['TL_CONFIG']['dateFormat']   = 'd.m.Y';
+$GLOBALS['TL_CONFIG']['datimFormat']  = 'd.m.Y H:i';
+{% if monitoringClientToken is defined %}
+$GLOBALS['TL_CONFIG']['monitoringClientToken'] = '{{monitoringClientToken}}';
+{% endif %}
+### INSTALL SCRIPT STOP ###

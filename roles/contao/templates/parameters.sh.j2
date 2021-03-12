@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+parameters:
+  database_host: {{ database_host | default("localhost") }}
+  database_port: {{ database_port | default("3306") }}
+  database_user: {{ database_user }}
+  database_password: '{{ database_password }}'
+  database_name: {{ database_name }}
+  secret: {{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=64') }}
+
+  {% if mailer_transport is defined %}
+  mailer_transport: {{ mailer_transport | default("smtp") }}
+  mailer_host: {{ mailer_host }}
+  mailer_user: {{ mailer_user }}
+  mailer_password: {{ mailer_password }}
+  mailer_port: {{ mailer_port | default("587") }}
+  mailer_encryption: {{ mailer_encryption | default("tls") }}
+  {% endif %}
