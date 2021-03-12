@@ -1,0 +1,52 @@
+---
+
+  - name: install Contao
+    shell: "{{ php_path }} -q -dmax_execution_time=0 -dmemory_limit=-1 -dallow_url_fopen=1 web/contao-manager.phar.php composer install --prefer-dist --no-dev --no-progress --no-ansi --no-interaction --optimize-autoloader"
+    args:
+      chdir: '{{ websitePath }}'
+
+  - name: create templates/bundles/ContaoCoreBundle/Error dir
+    file:
+      path: "{{ websitePath }}/templates/bundles/ContaoCoreBundle/Error"
+      state: directory
+
+  - name: copy default error-page
+    copy:
+     src: error_layout.html.twig.j2
+     dest: "{{ websitePath }}/templates/bundles/ContaoCoreBundle/Error/layout.html.twig"
+
+  - name: crypt InstallPassword
+    shell:  htpasswd -nbB "" {{ installPassword }} | tr -d ':\n'
+    register: psk
+    delegate_to: 127.0.0.1
+
+  - name: Set InstallPassword to variable
+    set_fact:
+      psk: "{{ psk.stdout }}"
+
+  - name: generate localconfig.php
+    template:
+      src: localconfig.php.j2
+      dest: "{{ websitePath }}/system/config/localconfig.php"
+
+  - name: install Contao-Modules
+    shell: "{{ php_path }} -q -dmax_execution_time=0 -dmemory_limit=-1 -dallow_url_fopen=1 web/contao-manager.phar.php composer require {{ item }} --prefer-dist --no-progress --no-ansi --no-interaction --optimize-autoloader"
+    args:
+      chdir: '{{ websitePath }}'
+    loop: "{{ contao_modules }}"
+
+  - name: update/create database-shema
+    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:migrate"
+    register: dbupdate
+  - debug:
+     var: dbupdate.stdout_lines
+
+  - name: Secure
+    include_tasks: lock_installtool.yml
+
+  - name: create Conato-BackendUser
+    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:user:create --username={{ item[0] }} --name='{{ item[1] }}' --email='{{ item[2] }}' --password='{{ item[3] }}' --change-password {{ item[5] }} --language={{ item[4] }}"
+    with_nested:
+    - "{{ users }}"
+    when:
+      - ( contao_version == '4.10' ) or ( contao_version == '4.11' )

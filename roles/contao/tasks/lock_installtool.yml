@@ -1,0 +1,7 @@
+---
+  - name: lock Contao-InstallTool
+    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:install:lock"
+    register: instStatus
+    failed_when: "instStatus.rc not in [ 0, 1 ]"
+  - debug:
+     var: instStatus.stdout_lines
