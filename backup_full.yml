@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
     - name: Dump of Databse
-      shell: "mysqldump -u {{ database_user }} --password={{ database_password }} -h {{ database_host }} {{ database_name }} > {{ websitePath }}/system/tmp/dump.sql"
+      shell: "mysqldump -u {{ database_user }} --add-drop-table --password={{ database_password }} -h {{ database_host }} {{ database_name }} > {{ websitePath }}/system/tmp/dump.sql"
       args:
         chdir: "{{ websitePath }}"
 
@@ -18,4 +18,8 @@
 
     - name: Synchronization templates
       shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/templates --exclude='.git' ./backups/{{ inventory_hostname }}/ "
+      delegate_to: localhost
+
+    - name: Synchronization isotope
+      shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/isotope --exclude='.git' ./backups/{{ inventory_hostname }}/ "
       delegate_to: localhost
