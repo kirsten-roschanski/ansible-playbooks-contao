@@ -1,110 +1,12 @@
 ---
-- hosts: all
+- hosts: contao
   tasks:
+  - name: 'Install Contao Manager'
+    include_role:
+      name: contao
+      tasks_from: install_manager
 
-  - name: composer.json vorhanden
-    stat:
-      path: "{{ websitePath }}/composer.json"
-    register: composerJsonExists
-
-  - name: create web dir
-    file:
-      path: "{{ websitePath }}/web"
-      state: directory
-    when: composerJsonExists.stat.exists == false
-
-  - name: create contao-manager dir
-    file:
-      path: "{{ websitePath }}/contao-manager"
-      state: directory
-    when: composerJsonExists.stat.exists == false
-
-  - name: generate contao-manager/config.json
-    template:
-      src: contao-manager-config.j2
-      dest: "{{ websitePath }}/contao-manager/config.json"
-    when: composerJsonExists.stat.exists == false
-
-  - name: Generate Contao Manger Password
-    shell:  htpasswd -nbB "" {{ contao_manager_pass }} | tr -d ':\n'
-    register: contao_manager_pass_crypt
-    delegate_to: 127.0.0.1
-
-  - name: Set Contao Manger Password
-    set_fact:
-      contao_manager_pass_crypt: "{{ contao_manager_pass_crypt.stdout }}"
-
-  - name: generate contao-manager/user.json
-    template:
-      src: contao-manager-user.j2
-      dest: "{{ websitePath }}/contao-manager/users.json"
-
-  - name: Download Contao Manager
-    get_url:
-      url: https://download.contao.org/contao-manager/stable/contao-manager.phar
-      dest: "{{ websitePath }}/web/contao-manager.phar.php"
-    when: composerJsonExists.stat.exists == false
-
-  - name: generate composer.json
-    template:
-      src: composer.j2
-      dest: "{{ websitePath }}/composer.json"
-    when: composerJsonExists.stat.exists == false
-
-  - name: Install Contao Manager
-    shell: "{{ php_path }} -q -dmax_execution_time=0 -dmemory_limit=-1 -dallow_url_fopen=1 web/contao-manager.phar.php composer install --prefer-dist --no-dev --no-progress --no-ansi --no-interaction --optimize-autoloader"
-    args:
-      chdir: '{{ websitePath }}'
-    when: composerJsonExists.stat.exists == false
-
-  - name: create config dir
-    file:
-      path: "{{ websitePath }}/config"
-      state: directory
-    when: composerJsonExists.stat.exists == false
-
-  - name: generate parameters.yml
-    template:
-      src: parameters.sh.j2
-      dest: "{{ websitePath }}/config/parameters.yml"
-
-  - name: Generate InstallPassword
-    shell:  htpasswd -nbB "" {{ installPassword }} | tr -d ':\n'
-    register: psk
-    delegate_to: 127.0.0.1
-
-  - name: Set InstallPassword
-    set_fact:
-      psk: "{{ psk.stdout }}"
-
-  - name: generate localconfig.php
-    template:
-      src: localconfig.php.j2
-      dest: "{{ websitePath }}/system/config/localconfig.php"
-
-  - name: 'Contao Installtool Lock'
-    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:install:lock"
-    register: instStatus
-    failed_when: "instStatus.rc not in [ 0, 1 ]"
-  - debug:
-     var: instStatus.stdout_lines
-
-  - name: Install Modules
-    shell: "{{ php_path }} -q -dmax_execution_time=0 -dmemory_limit=-1 -dallow_url_fopen=1 web/contao-manager.phar.php composer require {{ item }} --prefer-dist --no-progress --no-ansi --no-interaction --optimize-autoloader"
-    args:
-      chdir: '{{ websitePath }}'
-    loop: "{{ contao_modules }}"
-
-  - name: 'Datenbank aktualisieren'
-    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:migrate"
-    register: dbupdate
-  - debug:
-     var: dbupdate.stdout_lines
-
-  - name: 'Contao BackendUser anlegen'
-    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:user:create --username={{ item[0] }} --name='{{ item[1] }}' --email='{{ item[2] }}' --password='{{ item[3] }}' --change-password {{ item[5] }} --language={{ item[4] }}"
-    with_nested:
-    - "{{ users }}"
-    when:
-      - composerJsonExists.stat.exists == false
-      - ( contao_version == '4.10' ) or ( contao_version == '4.11' )
+  - name: 'Install Contao'
+    include_role:
+      name: contao
+      tasks_from: install_base
