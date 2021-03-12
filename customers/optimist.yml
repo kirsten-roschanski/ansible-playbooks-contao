@@ -1,0 +1,60 @@
+contao:
+  children:
+    optimist: # Einzigartigen Namen, damit die Variablen nicht überschrieben werden
+      hosts:
+        website001.demo.de:
+      vars:
+        ansible_user: kjones
+        ansible_python_interpreter: /usr/bin/env python3
+
+        php_path: /usr/bin/php7.4
+        websitePath: /var/www/html/optimist
+
+        ## DATABASE
+        database_host: localhost
+        database_port: 3306
+        database_user: optimist
+        database_password: meinmySQLPasswort
+        database_name: optimist
+
+        mailer_transport: smtp
+        mailer_host: mail.contao.org
+        mailer_user: kjones
+        mailer_password: meinSmtpPasswort
+        mailer_port: 25
+        mailer_encryption: tls
+
+        ## CONTAO INSTALL
+        installPassword: meinInstallPassword
+
+        ## CONTAO-CONFIG
+        adminEmail: kevinjones@contao.org
+        websiteTitle: "Kevin Jones"
+        contao_version: "4.10"
+        contao_modules:
+          - "contao/calendar-bundle {{ contao_version }}.*"
+          - "contao/comments-bundle {{ contao_version }}.*"
+          - "contao/faq-bundle {{ contao_version }}.*"
+          - "contao/listing-bundle {{ contao_version }}.*"
+          - "contao/news-bundle {{ contao_version }}.*"
+          - "contao/newsletter-bundle {{ contao_version }}.*"
+          - "terminal42/notification_center"
+          - "erdmannfreunde/euf_nutshell"
+          - "erdmannfreunde/theme-toolbox"
+          - "erdmannfreunde/euf_contact"
+          - "erdmannfreunde/contao-grid-bundle"
+          - "erdmannfreunde/euf_hero"
+          - "erdmannfreunde/portfoliobundle"
+
+        ## CONTAO-MANAGER
+        contao_manager_user: administartor
+        contao_manager_pass: meinManagerPassword
+
+        ## MONITORING
+        monitoringClientToken: meinPersoenlicherMonitoringClientToken
+
+        ## CONTAO-Benutzer
+        users:
+         - ["k.jones", "Kevin Jones", "kevin.jones@contao.org", "kevinjones", "de", "--admin"]
+         - ["h.lewis", "Helen Lewis", "helen.lewis@contao.org", "helenlewis", "en"]
+         - ["j.wilson", "James Wilson", "james.wilson@contao.org", "jameswilson", "de"]

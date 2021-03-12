@@ -1,0 +1,50 @@
+---
+- hosts: contao
+  tasks:
+  - name: 'Install Contao Manager'
+    include_role:
+      name: contao
+      tasks_from: install_manager
+
+  - name: 'Install Contao'
+    include_role:
+      name: contao
+      tasks_from: install_base
+
+  - name: create contao-manager/packages/ dir
+    file:
+      path: "{{ websitePath }}/contao-manager/packages/"
+      state: directory
+
+  - name: Download Optimist Theme
+    get_url:
+      url: https://github.com/ErdmannFreunde/optimist-theme-bundle/archive/master.zip
+      dest: "{{ websitePath }}/contao-manager/packages/erdmannfreunde__optimist-theme-bundle.zip"
+
+  - name: install Optimist Theme
+    shell: "{{ php_path }} -q -dmax_execution_time=0 -dmemory_limit=-1 -dallow_url_fopen=1 web/contao-manager.phar.php composer require erdmannfreunde/optimist-theme-bundle --prefer-dist --no-progress --no-ansi --no-interaction --optimize-autoloader"
+    args:
+      chdir: '{{ websitePath }}'
+
+  - name: Import Database
+    shell: "mysql -u {{ database_user }} --password={{ database_password }} -h {{ database_host }} {{ database_name }} < templates/optimist_{{ contao_version | regex_replace('\\.', '') }}_se.sql"
+    args:
+      chdir: "{{ websitePath }}"
+
+  - name: 'Symlinks the public resources into the web directory'
+    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:symlinks"
+
+  - name: 'Clears the cache'
+    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console cache:clear"
+    register: cacheStatus
+  - debug:
+     var: cacheStatus.stdout_lines
+
+  - name: 'Warms up an empty cache'
+    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console cache:warmup"
+    register: warmupStatus
+  - debug:
+     var: warmupStatus.stdout_lines
+
+  - name: 'Lock access to the site while maintenance...'
+    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console lexik:maintenance:lock"
