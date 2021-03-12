@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: contao
   tasks:
   - name: 'Show Contao Version'
     command: "{{ php_path }} {{ websitePath }}/vendor/bin/contao-console contao:version"
