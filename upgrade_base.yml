@@ -30,7 +30,7 @@
   - debug:
      var: update.stdout_lines
 
-  - name: 'Datenbankupdate für Contao'
+  - name: 'Datenbankupdate for Contao'
     command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:migrate"
     register: dbupdate
   - debug:
