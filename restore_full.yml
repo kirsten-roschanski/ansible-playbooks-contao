@@ -1,0 +1,26 @@
+---
+- hosts: all
+  tasks:
+
+    - name: Copy from local to remote
+      ansible.builtin.fetch:
+        src: "./backups/{{ inventory_hostname }}/{{ inventory_hostname }}.sql"
+        dest: "{{ websitePath }}/system/tmp/dump.sql"
+        flat: yes
+
+    - name: Import Databse
+      shell: "mysql -u {{ database_user }} --password={{ database_password }} -h {{ database_host }} {{ database_name }} < {{ websitePath }}/system/tmp/dump.sql"
+      args:
+        chdir: "{{ websitePath }}"
+
+    - name: Synchronization files
+      shell: "rsync -az ./backups/{{ inventory_hostname }}/files/* {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/files/"
+      delegate_to: localhost
+
+    - name: Synchronization templates
+      shell: "rsync -az ./backups/{{ inventory_hostname }}/templates/* {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/templates/"
+      delegate_to: localhost
+
+    - name: Synchronization isotope
+      shell: "rsync -az ./backups/{{ inventory_hostname }}/isotope/* {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/isotope/"
+      delegate_to: localhost
