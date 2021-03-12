@@ -1,43 +1,45 @@
-website001: # Einzigartigen Namen, damit die Variablen nicht überschrieben werden
-  hosts:
-    website001.demo.de:
-  vars:
-    ansible_user: kjones
-    ansible_python_interpreter: /usr/bin/env python3
+contao:
+  children:
+    website001: # Einzigartigen Namen, damit die Variablen nicht überschrieben werden
+      hosts:
+        website001.demo.de:
+      vars:
+        ansible_user: kjones
+        ansible_python_interpreter: /usr/bin/env python3
 
-    php_path: /usr/bin/php7.4
-    websitePath: /var/www/html/website001
+        php_path: /usr/bin/php7.4
+        websitePath: /var/www/html/website001
 
-    ## DATABASE
-    database_host: localhost
-    database_port: 3306
-    database_user: mysql1
-    database_password: meinmySQLPasswort
-    database_name: mysql1
+        ## DATABASE
+        database_host: localhost
+        database_port: 3306
+        database_user: mysql1
+        database_password: meinmySQLPasswort
+        database_name: mysql1
 
-    mailer_transport: smtp
-    mailer_host: mail.contao.org
-    mailer_user: kjones
-    mailer_password: meinSmtpPasswort
-    mailer_port: 25
-    mailer_encryption: tls
+        mailer_transport: smtp
+        mailer_host: mail.contao.org
+        mailer_user: kjones
+        mailer_password: meinSmtpPasswort
+        mailer_port: 25
+        mailer_encryption: tls
 
-    ## CONTAO INSTALL
-    installPassword: meinInstallPassword
+        ## CONTAO INSTALL
+        installPassword: meinInstallPassword
 
-    ## CONTAO-CONFIG
-    adminEmail: kevinjones@contao.org
-    websiteTitle: "Kevin Jones"
-    contao_version: "4.10"
-    contao_modules:
-      - "contao/news-bundle"
+        ## CONTAO-CONFIG
+        adminEmail: kevinjones@contao.org
+        websiteTitle: "Kevin Jones"
+        contao_version: "4.10"
+        contao_modules:
+          - "contao/news-bundle"
 
-    ## CONTAO-MANAGER
-    contao_manager_user: administartor
-    contao_manager_pass: meinManagerPassword
+        ## CONTAO-MANAGER
+        contao_manager_user: administartor
+        contao_manager_pass: meinManagerPassword
 
-    ## CONTAO-Benutzer
-    users:
-     - ["k.jones", "Kevin Jones", "kevin.jones@contao.org", "kevinjones", "de", "--admin"]
-     - ["h.lewis", "Helen Lewis", "helen.lewis@contao.org", "helenlewis", "en"]
-     - ["j.wilson", "James Wilson", "james.wilson@contao.org", "jameswilson", "de"]
+        ## CONTAO-Benutzer
+        users:
+         - ["k.jones", "Kevin Jones", "kevin.jones@contao.org", "kevinjones", "de", "--admin"]
+         - ["h.lewis", "Helen Lewis", "helen.lewis@contao.org", "helenlewis", "en"]
+         - ["j.wilson", "James Wilson", "james.wilson@contao.org", "jameswilson", "de"]

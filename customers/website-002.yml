@@ -1,36 +1,38 @@
-website002: # Einzigartigen Namen, damit die Variablen nicht überschrieben werden
-  hosts:
-    website002.demo.de:
-  vars:
-    ansible_user: kjones
-    ansible_python_interpreter: /usr/bin/env python3
+contao:
+  children:
+    website002: # Einzigartigen Namen, damit die Variablen nicht überschrieben werden
+      hosts:
+        website002.demo.de:
+      vars:
+        ansible_user: kjones
+        ansible_python_interpreter: /usr/bin/env python3
 
-    php_path: /usr/bin/php7.4
-    websitePath: /var/www/html/website002
+        php_path: /usr/bin/php7.4
+        websitePath: /var/www/html/website002
 
-    ## DATABASE
-    database_host: localhost
-    database_port: 3306
-    database_user: mysql2
-    database_password: meinmySQLPasswort
-    database_name: mysql2
+        ## DATABASE
+        database_host: localhost
+        database_port: 3306
+        database_user: mysql2
+        database_password: meinmySQLPasswort
+        database_name: mysql2
 
-    ## CONTAO INSTALL
-    installPassword: meinInstallPassword
+        ## CONTAO INSTALL
+        installPassword: meinInstallPassword
 
-    ## CONTAO-CONFIG
-    adminEmail: kevinjones@contao.org
-    websiteTitle: "Kevin Jones"
-    contao_version: "4.9"
-    contao_modules:
-      - "contao/news-bundle"
+        ## CONTAO-CONFIG
+        adminEmail: kevinjones@contao.org
+        websiteTitle: "Kevin Jones"
+        contao_version: "4.9"
+        contao_modules:
+          - "contao/news-bundle"
 
-    ## CONTAO-MANAGER
-    contao_manager_user: administartor
-    contao_manager_pass: meinManagerPassword
+        ## CONTAO-MANAGER
+        contao_manager_user: administartor
+        contao_manager_pass: meinManagerPassword
 
-    ## CONTAO-Benutzer (werden erst ab 4.10 mit angelegt)
-    users:
-     - ["k.jones", "Kevin Jones", "kevin.jones@contao.org", "kevinjones", "de", "--admin"]
-     - ["h.lewis", "Helen Lewis", "helen.lewis@contao.org", "helenlewis", "en"]
-     - ["j.wilson", "James Wilson", "james.wilson@contao.org", "jameswilson", "de"]
+        ## CONTAO-Benutzer (werden erst ab 4.10 mit angelegt)
+        users:
+         - ["k.jones", "Kevin Jones", "kevin.jones@contao.org", "kevinjones", "de", "--admin"]
+         - ["h.lewis", "Helen Lewis", "helen.lewis@contao.org", "helenlewis", "en"]
+         - ["j.wilson", "James Wilson", "james.wilson@contao.org", "jameswilson", "de"]
