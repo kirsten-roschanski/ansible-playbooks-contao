@@ -5,5 +5,16 @@
             "username": "{{ contao_manager_user }}",
             "password": "{{ contao_manager_pass_crypt }}"
         }
-    }
+    },
+{% if monitoringClientToken is defined %}
+    "tokens": {
+        "{{monitoringClientToken}}": {
+            "username": "{{ contao_manager_user }}",
+            "client_id": "Monitoring",
+            "scope": "admin"
+        }
+    },
+{% endif %}
+    "version": 2,
+    "secret": "{{ contao_manager_secret }}"
 }

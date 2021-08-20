@@ -6,12 +6,15 @@ parameters:
   database_password: '{{ database_password }}'
   database_name: {{ database_name }}
   secret: {{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=64') }}
-
-  {% if mailer_transport is defined %}
+{% if mailer_transport is defined and contao_version == '4.9' %}
   mailer_transport: {{ mailer_transport | default("smtp") }}
   mailer_host: {{ mailer_host }}
   mailer_user: {{ mailer_user }}
   mailer_password: {{ mailer_password }}
   mailer_port: {{ mailer_port | default("587") }}
   mailer_encryption: {{ mailer_encryption | default("tls") }}
-  {% endif %}
+{% endif %}
+{% if contao_version != '4.9' or legacy_routing is not defined or legacy_routing == false %}
+  router.request_context.host: '{{ inventory_hostname }}'
+  router.request_context.scheme: '{{ scheme | default("https") }}'
+{% endif %}

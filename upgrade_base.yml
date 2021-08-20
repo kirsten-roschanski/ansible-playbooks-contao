@@ -23,12 +23,17 @@
      var: update.stdout_lines
 
   - name: 'Update Contao'
-    shell: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php composer update"
+    shell: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php composer update --with-all-dependencies"
     args:
       chdir: '{{ websitePath }}'
     register: update
   - debug:
      var: update.stdout_lines
+
+  - name: 'Write new CONFIG'
+    include_role:
+      name: contao
+      tasks_from: write_config
 
   - name: 'Datenbankupdate for Contao'
     command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:migrate"

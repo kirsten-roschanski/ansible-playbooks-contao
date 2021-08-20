@@ -1,3 +1,45 @@
 # Contao configuration
 contao:
-    url_suffix: ''
+{% if contao_version == '4.9' %}
+  url_suffix: ''
+{% endif %}
+{% if contao_version != '4.9' %}
+  legacy_routing: {{ legacy_routing | default("false") }}
+  localconfig:
+    adminEmail: '{{adminEmail}}'
+    timeZone: {{ timeZone | default("Europe/Berlin") }}
+    timeFormat: {{ timeFormat | default("H:i") }}
+    dateFormat: {{ dateFormat | default("d.m.Y") }}
+    datimFormat: {{ datimFormat | default("d.m.Y H:i") }}
+    undoPeriod: {{ undoPeriod | default("5184000") }}
+    imageWidth: {{ imageWidth | default("3000") }}
+    imageHeight: {{ imageHeight | default("3000") }}
+    maxFileSize: {{ maxFileSize | default("20480000") }}
+    minPasswordLength: {{ minPasswordLength | default("12") }}
+    folderUrl: {{ folderUrl | default("true") }}
+    licenseAccepted: true
+    installPassword: {{ psk }}
+{% if badge_title is defined or custom_css is defined or custom_js is defined %}
+  backend:
+    {% if badge_title is defined %}
+    badge_title: '{{badge_title}}'
+    {% endif %}
+    {% if custom_css is defined %}
+    custom_css:
+        - '{{custom_css}}'
+    {% endif %}
+    {% if custom_js is defined %}
+    custom_js:
+        - '{{custom_js}}'
+    {% endif %}
+{% endif %}
+{% if mailer_transport is defined %}
+  mailer:
+    transports:
+        '{{inventory_hostname}}': ~
+framework:
+    mailer:
+        transports:
+            '{{inventory_hostname}}': {{ mailer_transport | default("smtp") }}://{{ mailer_user }}:{{ mailer_password }}@{{ mailer_host }}:{{ mailer_port | default("587") }}
+{% endif %}
+{% endif %}

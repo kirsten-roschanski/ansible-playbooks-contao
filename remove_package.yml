@@ -1,0 +1,32 @@
+#
+# ansible-playbook -i inventory_hostname remove_package.yml --extra-vars="module=name"
+#
+---
+- hosts: contao
+  tasks:
+
+  - name: 'Remove package'
+    shell: "{{ php_path }} -d memory_limit=-1 web/contao-manager.phar.php composer remove {{module}}"
+    args:
+      chdir: '{{ websitePath }}'
+    register: update
+  - debug:
+     var: update.stdout_lines
+
+  - name: 'Clears the cache'
+    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console cache:clear"
+    register: cacheStatus
+  - debug:
+     var: cacheStatus.stdout_lines
+
+  - name: 'Warms up an empty cache'
+    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console cache:warmup"
+    register: warmupStatus
+  - debug:
+     var: warmupStatus.stdout_lines
+
+  - name: 'Datenbankupdate für Contao'
+    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:migrate "
+    register: dbupdate
+  - debug:
+     var: dbupdate.stdout_lines

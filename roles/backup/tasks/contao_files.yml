@@ -1,0 +1,28 @@
+---
+  - name: Synchronization files
+    shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/files --exclude='.git' --exclude='nutshell' ./backups/{{ inventory_hostname }}/ "
+    delegate_to: localhost
+
+  - name: Synchronization templates
+    shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/templates --exclude='.git' ./backups/{{ inventory_hostname }}/ "
+    delegate_to: localhost
+
+  - name: set variable isotope exists
+    stat:
+      path: "{{ websitePath }}/isotope"
+    register: isotopeExists
+
+  - name: Synchronization isotope
+    shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/isotope ./backups/{{ inventory_hostname }}/ "
+    delegate_to: localhost
+    when: isotopeExists.stat.exists == true
+
+  - name: set variable contao exists
+    stat:
+      path: "{{ websitePath }}/contao"
+    register: contaoExists
+
+  - name: Synchronization contao
+    shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/contao ./backups/{{ inventory_hostname }}/ "
+    delegate_to: localhost
+    when: contaoExists.stat.exists == true

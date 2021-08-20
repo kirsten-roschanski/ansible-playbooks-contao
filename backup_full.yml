@@ -1,25 +1,11 @@
 ---
-- hosts: all
+- hosts: contao
   tasks:
-    - name: Dump of Databse
-      shell: "mysqldump -u {{ database_user }} --add-drop-table --password={{ database_password }} -h {{ database_host }} {{ database_name }} > {{ websitePath }}/system/tmp/dump.sql"
-      args:
-        chdir: "{{ websitePath }}"
-
-    - name: Copy from remote to local
-      ansible.builtin.fetch:
-        src: "{{ websitePath }}/system/tmp/dump.sql"
-        dest: "./backups/{{ inventory_hostname }}/{{ ansible_date_time.date }}-{{ inventory_hostname }}.sql"
-        flat: yes
-
-    - name: Synchronization files
-      shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/files --exclude='.git' ./backups/{{ inventory_hostname }}/ "
-      delegate_to: localhost
-
-    - name: Synchronization templates
-      shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/templates --exclude='.git' ./backups/{{ inventory_hostname }}/ "
-      delegate_to: localhost
-
-    - name: Synchronization isotope
-      shell: "rsync -az {{ ansible_user }}@{{ inventory_hostname }}:{{ websitePath }}/isotope --exclude='.git' ./backups/{{ inventory_hostname }}/ "
-      delegate_to: localhost
+  - name: 'Backup DB'
+    include_role:
+      name: backup
+      tasks_from: db_backup
+  - name: 'Contao Files'
+    include_role:
+      name: backup
+      tasks_from: contao_files

@@ -1,6 +1,14 @@
+#
+# ansible-playbook -i inventory_hostname install_optimist.yml --extra-vars="install_demo=true"
+#
 ---
 - hosts: contao
   tasks:
+  - name: 'Write Configs'
+    include_role:
+      name: contao
+      tasks_from: write_config
+
   - name: 'Install Contao Manager'
     include_role:
       name: contao
@@ -26,10 +34,16 @@
     args:
       chdir: '{{ websitePath }}'
 
+  - name: check Demo exists
+    stat:
+      path: "{{ websitePath }}/templates/optimist_{{ contao_version | regex_replace('\\.', '') }}_se.sql"
+    register: demoSQLExists
+
   - name: Import Database
     shell: "mysql -u {{ database_user }} --password={{ database_password }} -h {{ database_host }} {{ database_name }} < templates/optimist_{{ contao_version | regex_replace('\\.', '') }}_se.sql"
     args:
       chdir: "{{ websitePath }}"
+    when: demoSQLExists.stat.exists == true and install_demo is defined
 
   - name: 'Symlinks the public resources into the web directory'
     shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:symlinks"

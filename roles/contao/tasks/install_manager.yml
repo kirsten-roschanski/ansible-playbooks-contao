@@ -10,32 +10,6 @@
       state: directory
     when: composerJsonExists.stat.exists == false
 
-  - name: create contao-manager dir
-    file:
-      path: "{{ websitePath }}/contao-manager"
-      state: directory
-    when: composerJsonExists.stat.exists == false
-
-  - name: generate contao-manager/config.json
-    template:
-      src: contao-manager-config.j2
-      dest: "{{ websitePath }}/contao-manager/config.json"
-    when: composerJsonExists.stat.exists == false
-
-  - name: crypt Contao-Manger-User-Password
-    shell:  htpasswd -nbB "" {{ contao_manager_pass }} | tr -d ':\n'
-    register: contao_manager_pass_crypt
-    delegate_to: 127.0.0.1
-
-  - name: Set ontao-Manger-User-Password to variable
-    set_fact:
-      contao_manager_pass_crypt: "{{ contao_manager_pass_crypt.stdout }}"
-
-  - name: generate contao-manager/user.json
-    template:
-      src: contao-manager-user.j2
-      dest: "{{ websitePath }}/contao-manager/users.json"
-
   - name: download Contao Manager
     get_url:
       url: https://download.contao.org/contao-manager/stable/contao-manager.phar
@@ -47,20 +21,3 @@
       src: composer.j2
       dest: "{{ websitePath }}/composer.json"
     when: composerJsonExists.stat.exists == false
-
-
-  - name: create config dir
-    file:
-      path: "{{ websitePath }}/config"
-      state: directory
-    when: composerJsonExists.stat.exists == false
-
-  - name: generate parameters.yml
-    template:
-      src: parameters.sh.j2
-      dest: "{{ websitePath }}/config/parameters.yml"
-
-  - name: generate config.yml
-    template:
-      src: config.j2
-      dest: "{{ websitePath }}/config/config.yml"

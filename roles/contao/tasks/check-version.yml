@@ -1,0 +1,6 @@
+---
+  - name: 'Show Contao Version'
+    command: "{{ php_path }} {{ websitePath }}/vendor/bin/contao-console contao:version"
+    register: version
+  - debug:
+      msg: "Contao Version - {{ version.stdout_lines }}"

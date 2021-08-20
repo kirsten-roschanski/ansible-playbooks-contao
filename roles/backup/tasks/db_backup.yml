@@ -1,0 +1,16 @@
+---
+  - name: Dump of Databse
+    shell: "mysqldump -u {{ database_user }} --add-drop-table --password={{ database_password }} -h {{ database_host }} {{ database_name }} > {{ websitePath }}/dump.sql"
+    args:
+      chdir: "{{ websitePath }}"
+
+  - name: Copy from remote to local
+    ansible.builtin.fetch:
+      src: "{{ websitePath }}/dump.sql"
+      dest: "./backups/{{ inventory_hostname }}/{{ ansible_date_time.weekday_number }}-{{ inventory_hostname }}.sql"
+      flat: yes
+
+  - name: Remove DB-Dump (delete file)
+    ansible.builtin.file:
+      path: "{{ websitePath }}/dump.sql"
+      state: absent

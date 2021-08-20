@@ -17,7 +17,8 @@ contao:
         database_password: meinmySQLPasswort
         database_name: mysql1
 
-        mailer_transport: smtp
+        ## Mailconfig
+        mailer_transport: smtp # smtps bei Contao > 4.9 see https://docs.contao.org/manual/de/system/einstellungen/#verschiedene-e-mail-konfigurationen-und-absenderadressen
         mailer_host: mail.contao.org
         mailer_user: kjones
         mailer_password: meinSmtpPasswort
@@ -26,6 +27,20 @@ contao:
 
         ## CONTAO INSTALL
         installPassword: meinInstallPassword
+#        legacy_routing: true # fals Isotope unter > 4.9 läuft
+#        custom_css: 'files/backend/custom.css' # see https://docs.contao.org/manual/de/system/einstellungen/#backend-einstellungen
+#        custom_js: 'files/backend/custom_js # see https://docs.contao.org/manual/de/system/einstellungen/#backend-einstellungen
+#        badge_title: 'Develop' # see https://docs.contao.org/manual/de/system/einstellungen/#backend-einstellungen
+#        undoPeriod: 5184000
+#        timeZone: 'Europe/Berlin'
+#        timeFormat: 'H:i'
+#        dateFormat: 'd.m.Y'
+#        datimFormat: 'd.m.Y H:i'
+#        imageWidth: 3000
+#        imageHeight: 3000
+#        maxFileSize: 20480000
+#        minPasswordLength: 12
+#        folderUrl: true
 
         ## CONTAO-CONFIG
         adminEmail: kevinjones@contao.org

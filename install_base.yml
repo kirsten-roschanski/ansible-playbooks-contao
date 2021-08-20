@@ -1,6 +1,11 @@
 ---
 - hosts: contao
   tasks:
+  - name: 'Write Configs'
+    include_role:
+      name: contao
+      tasks_from: write_config
+
   - name: 'Install Contao Manager'
     include_role:
       name: contao
