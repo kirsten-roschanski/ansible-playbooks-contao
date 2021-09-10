@@ -1,37 +1,40 @@
 # Contao configuration
 contao:
-{% if contao_version == '4.9' %}
-  url_suffix: ''
+{% if prepend_locale is defined %}
+  prepend_locale: {{ prepend_locale | default("false") }}
+{% endif %}
+{% if contao_version == '4.9' or url_suffix is defined %}
+  url_suffix: {{ url_suffix | default("''") }}
 {% endif %}
 {% if contao_version != '4.9' %}
   legacy_routing: {{ legacy_routing | default("false") }}
   localconfig:
     adminEmail: '{{adminEmail}}'
-    timeZone: {{ timeZone | default("Europe/Berlin") }}
-    timeFormat: {{ timeFormat | default("H:i") }}
-    dateFormat: {{ dateFormat | default("d.m.Y") }}
-    datimFormat: {{ datimFormat | default("d.m.Y H:i") }}
+    timeZone: "{{ timeZone | default("Europe/Berlin") }}"
+    timeFormat: "{{ timeFormat | default("H:i") }}"
+    dateFormat: "{{ dateFormat | default("d.m.Y") }}"
+    datimFormat: "{{ datimFormat | default("d.m.Y H:i") }}"
     undoPeriod: {{ undoPeriod | default("5184000") }}
     imageWidth: {{ imageWidth | default("3000") }}
     imageHeight: {{ imageHeight | default("3000") }}
     maxFileSize: {{ maxFileSize | default("20480000") }}
     minPasswordLength: {{ minPasswordLength | default("12") }}
     folderUrl: {{ folderUrl | default("true") }}
+    installPassword: "{{ psk }}"
     licenseAccepted: true
-    installPassword: {{ psk }}
 {% if badge_title is defined or custom_css is defined or custom_js is defined %}
   backend:
-    {% if badge_title is defined %}
+{% if badge_title is defined %}
     badge_title: '{{badge_title}}'
-    {% endif %}
-    {% if custom_css is defined %}
+{% endif %}
+{% if custom_css is defined %}
     custom_css:
         - '{{custom_css}}'
-    {% endif %}
-    {% if custom_js is defined %}
+{% endif %}
+{% if custom_js is defined %}
     custom_js:
         - '{{custom_js}}'
-    {% endif %}
+{% endif %}
 {% endif %}
 {% if mailer_transport is defined %}
   mailer:
@@ -41,5 +44,13 @@ framework:
     mailer:
         transports:
             '{{inventory_hostname}}': {{ mailer_transport | default("smtp") }}://{{ mailer_user }}:{{ mailer_password }}@{{ mailer_host }}:{{ mailer_port | default("587") }}
+{% endif %}
+{% if sql_mode is defined %}
+doctrine:
+  dbal:
+    connections:
+      default:
+        options:
+          1002: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"
 {% endif %}
 {% endif %}

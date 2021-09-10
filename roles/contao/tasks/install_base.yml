@@ -49,4 +49,4 @@
     with_nested:
     - "{{ users }}"
     when:
-      - ( contao_version == '4.10' ) or ( contao_version == '4.11' )
+      - contao_version != '4.9'

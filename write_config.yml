@@ -5,3 +5,7 @@
     include_role:
       name: contao
       tasks_from: write_config
+  - name: 'Clear Cache'
+    include_role:
+      name: contao
+      tasks_from: clear_cache

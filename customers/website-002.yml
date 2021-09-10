@@ -16,6 +16,7 @@ contao:
         database_user: mysql2
         database_password: meinmySQLPasswort
         database_name: mysql2
+#       sql_mode: true #  see https://github.com/contao/contao/pull/3175
 
         ## CONTAO INSTALL
         installPassword: meinInstallPassword

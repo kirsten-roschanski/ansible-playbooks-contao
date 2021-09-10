@@ -6,9 +6,9 @@
             "password": "{{ contao_manager_pass_crypt }}"
         }
     },
-{% if monitoringClientToken is defined %}
+{% if contao_manager_token is defined %}
     "tokens": {
-        "{{monitoringClientToken}}": {
+        "{{contao_manager_token}}": {
             "username": "{{ contao_manager_user }}",
             "client_id": "Monitoring",
             "scope": "admin"

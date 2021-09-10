@@ -73,6 +73,11 @@
       src: config.j2
       dest: "{{ websitePath }}/config/config.yml"
 
+  - name: create system/config dir
+    file:
+      path: "{{ websitePath }}/system/config"
+      state: directory
+
   - name: generate localconfig.php
     template:
       src: localconfig.php.j2
@@ -94,15 +99,3 @@
     copy:
      src: error_layout.html.twig.j2
      dest: "{{ websitePath }}/templates/bundles/ContaoCoreBundle/Error/layout.html.twig"
-
-  - name: 'Clear Cache'
-    shell: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console cache:clear --env=prod --no-warmup"
-    register: cacheStatus
-  - debug:
-     var: cacheStatus.stdout_lines
-
-  - name: 'Datenbank aktualisieren'
-    command: "{{ php_path }} -d memory_limit=-1 {{ websitePath }}/vendor/bin/contao-console contao:migrate"
-    register: dbupdate
-  - debug:
-     var: dbupdate.stdout_lines

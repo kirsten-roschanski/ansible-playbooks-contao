@@ -9,10 +9,18 @@
     },
     "scripts": {
         "post-install-cmd": [
+{% if contao_version == '4.9' %}
             "Contao\\ManagerBundle\\Composer\\ScriptHandler::initializeApplication"
+{% else %}
+            "@php vendor/bin/contao-setup"
+{% endif %}
         ],
         "post-update-cmd": [
+{% if contao_version == '4.9' %}
             "Contao\\ManagerBundle\\Composer\\ScriptHandler::initializeApplication"
+{% else %}
+            "@php vendor/bin/contao-setup"
+{% endif %}
         ]
     }
 }

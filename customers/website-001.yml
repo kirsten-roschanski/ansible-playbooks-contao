@@ -16,6 +16,7 @@ contao:
         database_user: mysql1
         database_password: meinmySQLPasswort
         database_name: mysql1
+#       sql_mode: true #  see https://github.com/contao/contao/pull/3175
 
         ## Mailconfig
         mailer_transport: smtp # smtps bei Contao > 4.9 see https://docs.contao.org/manual/de/system/einstellungen/#verschiedene-e-mail-konfigurationen-und-absenderadressen
